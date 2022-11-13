@@ -1,9 +1,9 @@
-* Authors
+### Authors
 
 - Salah Eddine
 - Imad
 - Boubakar
 
-* Description
+### Description
 
-The project 
+The project aims to automate upskilling management in companies.
