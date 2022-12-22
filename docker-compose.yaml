@@ -1,0 +1,23 @@
+version: "3.8"
+
+services:
+  app:
+    build: .
+    depends_on :
+      - db
+    command: ["./wait-for-postgres.sh", "db", "python", "app.py"]        
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+
+
+  db:
+    image: postgres:12
+    env_file:
+      - .env
+    volumes: 
+      - ./pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
