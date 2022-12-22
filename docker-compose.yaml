@@ -5,7 +5,6 @@ services:
     build: .
     depends_on :
       - db
-    command: ["./wait-for-postgres.sh", "db", "python", "app.py"]        
     env_file:
       - .env
     ports:
@@ -17,7 +16,10 @@ services:
     env_file:
       - .env
     volumes: 
-      - ./pgdata:/var/lib/postgresql/data
+      - vol1:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+
+volumes:
+   vol1:
 

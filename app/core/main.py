@@ -3,8 +3,10 @@ import spacy
 import json
 from pydantic import BaseModel
 from typing import List
-
-
+from pyresparser import ResumeParser
+from fastapi import FastAPI, File, UploadFile, Form
+from nltk.tokenize import word_tokenize
+from typing import Optional
 
 model = spacy.load('en_core_web_sm')
 
@@ -28,8 +30,29 @@ class Output(BaseModel):
 async def root():
     return {"message": "Hello World"}
 
-@app.get('/spacy/prediction/{text}')
-def prediction(text : str):
+
+@app.get("/hello/{name}")
+async def root(name:str):
+    return {"noms": name}
+
+
+@app.post("/upload/")
+def upload(file: UploadFile = File(...)):
+    try:
+        file_location = f"files/{file.filename}"
+
+        contents =  ResumeParser(file_location).get_extracted_data()
+        print(contents)
+        return  {"message": file_location}
+    except Exception:
+        return {"message": "There was an error uploading the file"}
+    finally:
+        file.file.close()
+
+
+
+@app.post('/extract')
+def exctract(text : str):
     #db.insert(text)
     entities : Dict = {}
     doc = model(text)
