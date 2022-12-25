@@ -1,8 +1,14 @@
 # Authors:
 
+- Salah Eddine
+- Imad
+- Boubakar
+
+
+
 # Description:
 
-The idea of this project is to match freelancers to projects based on their skills.
+The idea of this project is to match consultants to projects based on their skills.
 
 for this, we parse Resume skills as well as project keywords and then perform the matching.
 
