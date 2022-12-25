@@ -1,0 +1,54 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="nofoobar.com" content="Nofoobar">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+
+    {% block title %}
+    <title>Home</title>
+    {% endblock %}
+
+</head>
+<body>
+    {% include "components/navbar.html" %}
+    {% block content %}
+    {% endblock %}
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+    {% block scripts %}
+    {% endblock %}
+   
+    {% if msg == 'True' %}
+   <div class="alert alert-primary" class="close">
+        Resume uploaded successfully!
+    </div>
+    {% endif %}
+
+    {% if msg == 'False' %}
+   <div class="alert alert-danger" class="close">
+        There was an error processing the file, Please try again!
+    </div>
+    {% endif %}
+
+    <form action="uploadresumes" enctype="multipart/form-data" method="post" autocomplete="off">
+
+    <div class="bg-light p-5 rounded-lg m-3">
+            <h5>Upload resume:</h5>
+            <input class="form-control" type="file" id="file" name="file" required>
+        </div>
+    </div>
+    <div class="bg-light rounded-lg m-3">
+            <button class="btn btn-primary" type="button submit"><i class="bx bxs-cloud-upload"
+                    style="font-size:1.4em;"></i> Upload</button>
+           
+                <a href="/home" class="button">
+                  <button class="btn btn-secondary" type="button" formnovalidate><i class="bx bxs-cloud-upload"
+                    style="font-size:1.4em;"></i> Go Back</button>
+                </a>
+
+    </div>
+    </form>
+</body>
+</html>
+
