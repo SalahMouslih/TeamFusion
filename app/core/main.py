@@ -12,8 +12,6 @@ model = spacy.load('en_core_web_sm')
 
 app = FastAPI()
 
-
-
 class Input(BaseModel):
     sentence: str
 
@@ -48,7 +46,6 @@ def upload(file: UploadFile = File(...)):
         return {"message": "There was an error uploading the file"}
     finally:
         file.file.close()
-
 
 
 @app.post('/extract')
