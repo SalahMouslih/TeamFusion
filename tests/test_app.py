@@ -13,52 +13,35 @@ def client():
 
 def test_upload(client):
 
-    '''
     filename = "files/resume_01.pdf"
+    response = client.post("/uploadresumes",
+                            files ={"file": ("filename", open(filename, "rb"), "application/json")}
+                        )
     
-    file = MultipartEncoder(
-        fields={'file': ('filename', open(filename, 'rb'), 'application/pdf')}
-        )
-
-    response = client.post("/uploadresume",
-                           data=file,
-                           headers={"Content-Type": "multipart/form-data"}
-                           )
-
-    assert response.status_code == 200
-    files = {'file': ("resume_01.pdf", open(test_file, 'rb'))}
-    response = client.post('/app/core/main/uploadresume', files=files)
-    print(test_file)
-    print(response.json())
-        '''
-    test_file = "files/resume_01.pdf"
-
-    files = {'file': ('files/resume_01.pdf', open(test_file, 'rb'))}
-    response = client.post('/uploadresume', files=files)
-    #assert 0
+    excpected_result ={
+    "resume": {
+        "name": "John Smith",
+        "email": "email@email.com",
+        "phone": "3868683442",
+        "degree": [],
+        "skills": [
+            "SQL",
+            "Java",
+            "Apache Spark",
+            "Python"
+        ],
+        "tot_exp": 0
+    }
+    }
     assert response.status_code == 303
-    #assert response.json() == {"message": True} or response.json() == {"message": False}
-
-
+    #assert response.json["resumes"] == excpected_result
+    assert response.is_redirect == True
 
 '''
-def test_prediction_json(client):
-    res = client.post('/uploadresume',
-                      json={'text': "When Sebastian Thrun started working on self-driving cars \
-                          at Google in 2007, few people outside of the company took him seriously. \
-                              I can tell you very senior CEOs of major American car companies would \
-                                  shake my hand and turn away because I wasn’t worth talking to, said \
-                                      Thrun, in an interview with Recode earlier this week.)"}) 
-                                      # Send a POST request on the route /spacy/prediction
-    data = json.loads(res.data) # Convert binary result res.data to Dict
+def test_get_resume(client, test_upload):
+    data = {'title': 'Hot Boat', 'description': 'This is a boat'}
+    resp = client.post('/uploadresumes', params={"msg": "None"})
+    response = test_upload
+    assert response.text() == 0
 
-    expected_result = {
-        '2007': 'DATE',
-        'American': 'NORP',
-        'Recode': 'ORG',
-        'Sebastian Thrun': 'PERSON',
-        'earlier this week': 'DATE',
-    }
-
-    assert data == expected_result
 '''

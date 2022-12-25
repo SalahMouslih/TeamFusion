@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Request, status
 import spacy 
 import json
-from pydantic import BaseModel
+from app.models import model
 from typing import List
 from pyresparser import ResumeParser
 from fastapi import FastAPI, File, UploadFile, Form
@@ -18,30 +18,12 @@ import aiofiles
 from app.core import database
 from starlette.datastructures import URL
 
-
 database.init_db()
 
-
-
-model = spacy.load('en_core_web_sm')
-
 app = FastAPI()
+
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
-
-
-
-class Input(BaseModel):
-    sentence: str
-
-class Resume(BaseModel):
-    name : str
-    email : str
-    phone : str
-    degree : str
-    skills : List
-    tot_exp : int
-
 
 
 @app.get("/")
@@ -73,10 +55,9 @@ def upload(request:Request, file: UploadFile = File(...)):
                 f.write(file.file.read())
                 
                 #extract resume infos
-                #data = ResumeParser(file_path).get_extracted_data()
                 data = resumeparse.read_file(file_path)
                 
-
+                #parse resume infos
                 resume = {}
                 resume["name"] = data["name"]
                 resume["email"] = data["email"]
@@ -86,11 +67,18 @@ def upload(request:Request, file: UploadFile = File(...)):
                 resume["skills"] = [skill for skill in data["skills"] if skill.lower() in skills]
                 print(resume["skills"])    
                 resume["tot_exp"] = data["total_exp"]
+                
+                #save infos
                 database.insert(resume)
                 
                 message = True
+                
+                #redirect with success message
                 redirect_url = URL(request.url_for('form_post')).include_query_params(msg=message)
-                return RedirectResponse(redirect_url, status_code=status.HTTP_303_SEE_OTHER)
+                response = RedirectResponse(redirect_url, status_code=status.HTTP_303_SEE_OTHER)
+                #added post data to unit test
+                response.form_data = resume
+                return response
 
 
     except Exception:
@@ -106,7 +94,7 @@ def upload(request:Request, file: UploadFile = File(...)):
 
 
 @app.get("/resumes")
-async def list(request:Request):
+async def list(request:Request , response_model=model.Resumes):
     res = database.list()
     resumes = []
     for data in res:
@@ -118,30 +106,3 @@ async def list(request:Request):
         resumes.append(resume)
 
     return templates.TemplateResponse("list_resumes.html", {"request": request, "resumes": resumes})
-
-
-@app.get('/extract/{text}')
-def exctract(text : str):
-    #db.insert(text)
-    entities : Dict = {}
-    doc = model(text)
-    for entity in doc.ents:
-        entities[entity.text] = entity.label_
-    return json.dumps(entities)
-
-'''
-@app.post("/extractions", response_model=Output)
-def extractions(input: Input):
-    document = model(input.sentence)
-
-    extractions = []
-    for entity in document.ents:
-      extraction = {}
-      extraction["first_index"] = entity.start_char
-      extraction["last_index"] = entity.end_char
-      extraction["name"] = entity.label_
-      extraction["content"] = entity.text
-      extractions.append(extraction)
-
-    return {"extractions": extractions}
-'''
