@@ -33,12 +33,10 @@ def test_upload(client):
         '''
     test_file = "files/resume_01.pdf"
 
-    with test_file.open('rb') as f:
-        files = {'files': f}
-        response = client.post('/uploadresume',
-                            files=files)
-    assert 0
-    #assert response.status_code == 303
+    files = {'file': ('files/resume_01.pdf', open(test_file, 'rb'))}
+    response = client.post('/uploadresume', files=files)
+    #assert 0
+    assert response.status_code == 303
     #assert response.json() == {"message": True} or response.json() == {"message": False}
 
 
@@ -63,4 +61,4 @@ def test_prediction_json(client):
     }
 
     assert data == expected_result
-'''git
+'''
