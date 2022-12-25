@@ -2,9 +2,14 @@ import pytest
 import json
 from fastapi.testclient import TestClient
 from requests_toolbelt.multipart.encoder import MultipartEncoder
-from app.core import main 
+from app.core.main import app 
 
-client = TestClient(main)
+@pytest.fixture 
+def client():
+    with TestClient(app) as client:
+        yield client
+
+
 
 def test_upload(client):
 
@@ -21,12 +26,12 @@ def test_upload(client):
                            )
 
     assert response.status_code == 200
-    test_file = "files/resume_01.pdf"
     files = {'file': ("resume_01.pdf", open(test_file, 'rb'))}
     response = client.post('/app/core/main/uploadresume', files=files)
     print(test_file)
     print(response.json())
         '''
+    test_file = "files/resume_01.pdf"
 
     with test_file.open('rb') as f:
         files = {'files': f}
@@ -58,4 +63,4 @@ def test_prediction_json(client):
     }
 
     assert data == expected_result
-'''
+'''git
