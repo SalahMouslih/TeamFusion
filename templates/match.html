@@ -1,0 +1,58 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="nofoobar.com" content="Nofoobar">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+
+    {% block title %}
+    <title>Home</title>
+    {% endblock %}
+
+</head>
+<body>
+    {% include "components/navbar.html" %}
+    {% block content %}
+    {% endblock %}
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+    {% block scripts %}
+    {% endblock %}
+    <div class="bg-light p-5 rounded-lg m-3">
+
+        <div class="center">
+        <h5>Build team</h5>
+
+        <form action="matchs" method="post" autocomplete="off">
+            <label for="project_id"> Select project </label>
+            <select id = "project_id" name="name">
+                {% for project in projects %}
+                    <option value="{{project.name}}">{{project.name}}</option>
+                {% endfor %}
+            </select><br>
+
+            <label for="number"> Number of teams members </label>
+            <select id = "number" name = "number">
+                    <option value="2">2 people</option>
+                    <option value="3">3 people</option>
+                    <option value="4">4 people</option>
+
+            </select>
+        </div>
+
+    </div>
+    <div>
+    <button class="btn btn-primary" type="button submit"><i class="bx bxs-cloud-upload"
+        style="font-size:1.4em;"></i> Match</button>
+
+    <a href="/home" class="button">
+    <button class="btn btn-secondary" type="button" ><i class="bx bxs-cloud-upload"
+        style="font-size:1.4em;"></i> Go Back</button>
+    </a>
+
+    </div>
+        </form>
+
+</body>
+</html>
+

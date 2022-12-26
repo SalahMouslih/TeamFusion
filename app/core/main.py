@@ -68,7 +68,7 @@ def upload(request:Request, file: UploadFile = File(...)):
                 resume["skills"] = [skill for skill in data["skills"] if skill.lower() in skills]
                 print(resume["skills"])    
                 resume["tot_exp"] = data["total_exp"]
-                
+                print(resume)
                 #save infos
                 database.insert(resume)
                 
@@ -122,9 +122,78 @@ async def upload_project(request:Request, name: str = Form(...), text: str = For
     entities = [ent.text for ent in doc.ents if ent.label_ == "IT"]
     message = True
     
-    print(doc.ents)
+    project = {}
+    project["name"] = name
+    project["description"] = text
+    project["skills"] = [doc.text.lower() for doc in doc.ents]
+
+    print(project)
+    
+    database.insert_proj(project)
+
     redirect_url = URL(request.url_for('form_post_proj')).include_query_params(msg=message)
     response = RedirectResponse(redirect_url, status_code=status.HTTP_303_SEE_OTHER)
     return response
 
+@app.get("/projects")
+async def list_proj(request:Request):
+    res = database.list_proj()
+    projects = []
+    for data in res:
+        project = {}
+        project["name"] = data[1]
+        project["description"] = data[2]
+        project["skills"] = data[3]
+        projects.append(project)
+
+    return templates.TemplateResponse("list_projects.html", {"request": request, "projects": projects})
+
+@app.get("/match")
+async def match(request:Request):
+    res = database.list_proj()
+    projects = []
+    for data in res:
+        project = {}
+        project["name"] = data[1]
+        projects.append(project)
+    
+    return templates.TemplateResponse("match.html", {"request": request, "projects": projects})
+
+@app.post("/matchs")
+async def match_teams(request:Request, name: str = Form(...), number: int  = Form(...)):
+
+    project = database.sel_proj(name)
+    # Get the required skills for the project
+    required_skills = project[3]
+
+    res = database.list()
+    
+    resumes = []
+    for data in res:
+        resume = {}
+        resume["name"] = data[1]
+        resume["skills"] = data[4]    
+        resumes.append(resume)
+    
+    team = []
+    # Iterate over the resumes
+    for resume in resumes:
+        team_member = {}
+        team_member["proj_name"] = project[1]
+        team_member["name"] = resume["name"]
+        team_member["num_skills"] = 0
+        # Get the skills of the resume
+        skills = resume["skills"].split(",")
+        
+        # Check if the resume has the required skills
+        for skill in skills:
+            print(skill)
+            if (skill in required_skills) : team_member["num_skills"]+= 1
+        team.append(team_member)
+    
+    print(team)
+    team = sorted(team, key=lambda x: x["num_skills"])
+
+    print(number)
+    return templates.TemplateResponse("teams.html", {"request": request, "teams": team[:number]})
 
