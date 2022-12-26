@@ -19,6 +19,7 @@ from app.core import database
 from starlette.datastructures import URL
 
 database.init_db()
+model = spacy.load("en_core_web_sm")
 
 app = FastAPI()
 
@@ -86,15 +87,11 @@ def upload(request:Request, file: UploadFile = File(...)):
             redirect_url = URL(request.url_for('form_post')).include_query_params(msg=message)
             return RedirectResponse(redirect_url, status_code=status.HTTP_303_SEE_OTHER)
 
-
     finally:
         file.file.close()
 
-
-
-
 @app.get("/resumes")
-async def list(request:Request , response_model=model.Resumes):
+async def list(request:Request):
     res = database.list()
     resumes = []
     for data in res:
@@ -106,3 +103,28 @@ async def list(request:Request , response_model=model.Resumes):
         resumes.append(resume)
 
     return templates.TemplateResponse("list_resumes.html", {"request": request, "resumes": resumes})
+
+
+@app.get("/uploadproject",response_class=HTMLResponse )
+async def form_post_proj(request: Request, msg: Optional[str] = None,):
+    return templates.TemplateResponse("add_project.html", {"request": request, "msg": msg})
+
+
+@app.post("/uploadprojects")
+async def upload_project(request:Request, name: str = Form(...), text: str = Form(...)):
+    
+    
+    print(name)
+    print(text)
+    doc = model(text)
+
+    # Use spacy's named entity recognition to find IT-related entities
+    entities = [ent.text for ent in doc.ents if ent.label_ == "IT"]
+    message = True
+    
+    print(doc.ents)
+    redirect_url = URL(request.url_for('form_post_proj')).include_query_params(msg=message)
+    response = RedirectResponse(redirect_url, status_code=status.HTTP_303_SEE_OTHER)
+    return response
+
+
