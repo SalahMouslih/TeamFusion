@@ -37,11 +37,36 @@ def test_upload(client):
     #assert response.json["resumes"] == excpected_result
     assert response.is_redirect == True
 
+
 '''
 def test_get_resume(client, test_upload):
-    data = {'title': 'Hot Boat', 'description': 'This is a boat'}
     resp = client.post('/uploadresumes', params={"msg": "None"})
     response = test_upload
     assert response.text() == 0
 
 '''
+
+def test_upload_project(client):
+    data={
+        "name" : "dummy project",
+        "text" : "dummy text"
+    }
+    response = client.post("/uploadprojects",
+                            data = data
+                        )
+    assert response.status_code == 303
+
+def test_match_teams(client):
+    data={
+        "name" : "dummy project",
+        "number" : 2
+    }
+    response = client.post("/matchs",
+                            data = data
+                        )
+
+    
+    assert response.status_code == 200
+    assert response.headers["Content-Type"] == 'text/html; charset=utf-8'
+
+    
