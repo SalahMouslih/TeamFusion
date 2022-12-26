@@ -187,13 +187,10 @@ async def match_teams(request:Request, name: str = Form(...), number: int  = For
         
         # Check if the resume has the required skills
         for skill in skills:
-            print(skill)
             if (skill in required_skills) : team_member["num_skills"]+= 1
         team.append(team_member)
     
-    print(team)
-    team = sorted(team, key=lambda x: x["num_skills"])
+    team = sorted(team, key=lambda x: x["num_skills"], reverse= True)
 
     print(number)
     return templates.TemplateResponse("teams.html", {"request": request, "teams": team[:number]})
-
