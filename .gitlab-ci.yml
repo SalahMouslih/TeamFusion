@@ -11,7 +11,7 @@ build:
     - /kaniko/executor
       --context "${CI_PROJECT_DIR}"
       --dockerfile "${CI_PROJECT_DIR}/Dockerfile"
-      --destination "${CI_REGISTRY_IMAGE}:build:${CI_COMMIT_TAG}"
+      --destination "${CI_REGISTRY_IMAGE}-build:${CI_COMMIT_TAG}"
 test:
   stage: test
   image:
@@ -21,4 +21,4 @@ test:
     - /kaniko/executor
       --context "${CI_PROJECT_DIR}"
       --dockerfile "${CI_PROJECT_DIR}/Dockerfile"
-      --destination "${CI_REGISTRY_IMAGE}:test:${CI_COMMIT_TAG}"
+      --destination "${CI_REGISTRY_IMAGE}-test:${CI_COMMIT_TAG}"
