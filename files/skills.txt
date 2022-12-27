@@ -1,0 +1,21 @@
+sql
+python
+java
+scala
+r
+stata
+data engineering
+data warehousing
+big Data
+spark
+kafka
+apache kafka
+apache spark
+Machine Learning
+amazon web services
+aws
+cloud
+etl
+deep learning
+azure
+microsoft azure
