@@ -20,4 +20,4 @@ test:
   script:
     - pip install pytest
     - export PYTHONPATH="$PYTHONPATH:."
-    - pytest .
+    - python -m pytest -s tests
