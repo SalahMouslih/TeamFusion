@@ -1,0 +1,73 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="nofoobar.com" content="Nofoobar">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+
+    {% block title %}
+    <title>Home</title>
+    {% endblock %}
+
+</head>
+<body>
+    {% include "components/navbar.html" %}
+    {% block content %}
+    {% endblock %}
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+    {% block scripts %}
+    {% endblock %}
+
+    <br>
+    <h4>Go to..</h4>
+    <br>
+
+
+<div class="row">
+  <div class="col-sm-4">
+    <div class="card">
+      <img class="card-img-top" src="https://www.skillate.com/wp-content/themes/skillate-child/assets/images/page-specific/solutions/resume-parser-and-indexer/resume-parser-and-indexer.png" alt="" width="500" 
+     height="310">
+
+      <div class="card-body">
+    <h5 class="card-title">Resume Parser</h5>
+    <p class="card-text">Here you can add resumes in order to extract valuable informations</p>
+        <a href="\uploadresume" class="btn btn-primary">Add resume</a>
+        <a href="\resumes" class="btn btn-primary">List resumes</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-4">
+    <div class="card">
+      <img class="card-img-top" src="https://www.marscrowd.com/wp-content/uploads/2021/09/entity-extraction-and-its-value.png" alt="">
+
+      <div class="card-body">
+        <h5 class="card-title">Project Parser</h5>
+        <p class="card-text">With this you can extract skills from project description</p>
+        <a href="\uploadproject" class="btn btn-primary">Add Project</a>
+        <a href="\projects" class="btn btn-primary">List Projects</a>
+      </div>
+    </div>
+  </div>
+   <div class="col-sm-4">
+    <div class="card">
+      <img class="card-img-top" src="https://ambassadorsolutions.com/wp-content/uploads/2022/01/PeoplePuzzlePix.jpg" alt=""width="300" 
+     height="310">
+
+      <div class="card-body">
+        <h5 class="card-title">Team composition</h5>
+        <p class="card-text">Create teams my matching resumes and project required skills</p>
+        <a href="\match" class="btn btn-primary">Build team</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</div>
+
+    
+</body>
+</html>
+
