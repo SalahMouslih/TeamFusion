@@ -1,18 +1,14 @@
-from os import getenv
+from app.models import model
 import psycopg2
 
-
-POSTGRES_USER='postgres'
-POSTGRES_PASSWORD='postgres'
-POSTGRES_SERVER='127.0.0.1'
-POSTGRES_DB='fastapi_db'
+db_creds = model.DBCreds()
 
 def init_db():
     conn = psycopg2.connect(
-        host=POSTGRES_SERVER,
-        database=POSTGRES_DB,
-        user=POSTGRES_USER,
-        password=POSTGRES_PASSWORD)
+        host=db_creds.db_host,
+        database=db_creds.db_database,
+        user=db_creds.db_username,
+        password=db_creds.db_password.get_secret_value())
     cur = conn.cursor()
     cur.execute('DROP TABLE IF EXISTS resumes;')
     cur.execute('CREATE TABLE resumes (id serial PRIMARY KEY,'
@@ -40,10 +36,10 @@ def init_db():
 
 def insert(resume:dict):
     conn = psycopg2.connect(
-        host=POSTGRES_SERVER,
-        database=POSTGRES_DB,
-        user=POSTGRES_USER,
-        password=POSTGRES_PASSWORD)
+      host=db_creds.db_host,
+        database=db_creds.db_database,
+        user=db_creds.db_username,
+        password=db_creds.db_password.get_secret_value())
     cur = conn.cursor()
     sql = "INSERT INTO resumes (name,email,phone,skills) VALUES (%(name)s, %(email)s, %(phone)s,%(skills)s)"
     cur.execute(sql,resume)
@@ -53,10 +49,10 @@ def insert(resume:dict):
 
 def list():
     conn = psycopg2.connect(
-        host=POSTGRES_SERVER,
-        database=POSTGRES_DB,
-        user=POSTGRES_USER,
-        password=POSTGRES_PASSWORD)
+        host=db_creds.db_host,
+        database=db_creds.db_database,
+        user=db_creds.db_username,
+        password=db_creds.db_password.get_secret_value())
     cur = conn.cursor()
     cur.execute(f"SELECT * FROM resumes;")
     result = cur.fetchall()
@@ -67,10 +63,10 @@ def list():
 
 def insert_proj(project:dict):
     conn = psycopg2.connect(
-        host=POSTGRES_SERVER,
-        database=POSTGRES_DB,
-        user=POSTGRES_USER,
-        password=POSTGRES_PASSWORD)
+        host=db_creds.db_host,
+        database=db_creds.db_database,
+        user=db_creds.db_username,
+        password=db_creds.db_password.get_secret_value())
     cur = conn.cursor()
     sql = "INSERT INTO projects (name,description,skills) VALUES (%(name)s, %(description)s,%(skills)s)"
     cur.execute(sql,project)
@@ -80,10 +76,10 @@ def insert_proj(project:dict):
 
 def list_proj():
     conn = psycopg2.connect(
-        host=POSTGRES_SERVER,
-        database=POSTGRES_DB,
-        user=POSTGRES_USER,
-        password=POSTGRES_PASSWORD)
+        host=db_creds.db_host,
+        database=db_creds.db_database,
+        user=db_creds.db_username,
+        password=db_creds.db_password.get_secret_value())
     cur = conn.cursor()
     cur.execute(f"SELECT * FROM projects;")
     result = cur.fetchall()
@@ -94,10 +90,10 @@ def list_proj():
 
 def sel_proj(name):
     conn = psycopg2.connect(
-        host=POSTGRES_SERVER,
-        database=POSTGRES_DB,
-        user=POSTGRES_USER,
-        password=POSTGRES_PASSWORD)
+        host=db_creds.db_host,
+        database=db_creds.db_database,
+        user=db_creds.db_username,
+        password=db_creds.db_password.get_secret_value())
     cur = conn.cursor()
     cur.execute(f"SELECT * FROM projects WHERE name ='%s';" %name)
     result = cur.fetchone()
