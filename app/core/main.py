@@ -1,20 +1,13 @@
-from fastapi import FastAPI, Request, status
-import spacy 
+from fastapi import Request, status
 import json
 from app.models import model
 from typing import List
-from pyresparser import ResumeParser
 from fastapi import FastAPI, File, UploadFile, Form
-from nltk.tokenize import word_tokenize
 from typing import Optional
 from fastapi.responses import RedirectResponse, HTMLResponse
-from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
-from io import  BytesIO
 from resume_parser import resumeparse
 from tempfile import TemporaryDirectory
 import os
-import aiofiles
 from app.core import database
 from starlette.datastructures import URL
 
