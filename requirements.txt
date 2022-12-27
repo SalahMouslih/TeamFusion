@@ -15,4 +15,5 @@ SQLAlchemy==1.4.42
 sqlparse==0.4.2
 databases==0.7.0
 resume-parser==0.8.4
+pyresparser==1.0.6
 en-core-web-sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.4.1/en_core_web_sm-3.4.1-py3-none-any.whl
