@@ -12,12 +12,15 @@ build:
       --context "${CI_PROJECT_DIR}"
       --dockerfile "${CI_PROJECT_DIR}/Dockerfile"
       --destination "${CI_REGISTRY_IMAGE}:${CI_COMMIT_TAG}"
+
 services:
   - postgres:12.2-alpine
 
 variables:
   POSTGRES_USER: postgres
   POSTGRES_PASSWORD: postgres
+  POSTGRES_DB: fastapi_db
+  POSTGRES_HOST_AUTH_METHOD: trust
   # Variable used to allow project to connect to gitlab-ci service
   DB_URI: "postgresql://postgres:postgres@postgres:5432/fastapi_db"
 
