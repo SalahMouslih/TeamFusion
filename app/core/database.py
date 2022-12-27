@@ -37,11 +37,12 @@ def init_db():
     conn.close()
 
 def insert(resume:dict):
+    parsed_db_uri = urlparse(db_creds.db_uri)
     conn = psycopg2.connect(
-      host=db_creds.db_host,
-        database=db_creds.db_database,
-        user=db_creds.db_username,
-        password=db_creds.db_password.get_secret_value())
+        host=parsed_db_uri.hostname,
+        database=parsed_db_uri.path[1:],
+        user=parsed_db_uri.username,
+        password=parsed_db_uri.password)
     cur = conn.cursor()
     sql = "INSERT INTO resumes (name,email,phone,skills) VALUES (%(name)s, %(email)s, %(phone)s,%(skills)s)"
     cur.execute(sql,resume)
@@ -50,11 +51,12 @@ def insert(resume:dict):
     conn.close()
 
 def list():
+    parsed_db_uri = urlparse(db_creds.db_uri)
     conn = psycopg2.connect(
-        host=db_creds.db_host,
-        database=db_creds.db_database,
-        user=db_creds.db_username,
-        password=db_creds.db_password.get_secret_value())
+        host=parsed_db_uri.hostname,
+        database=parsed_db_uri.path[1:],
+        user=parsed_db_uri.username,
+        password=parsed_db_uri.password)
     cur = conn.cursor()
     cur.execute(f"SELECT * FROM resumes;")
     result = cur.fetchall()
@@ -64,11 +66,12 @@ def list():
     return result
 
 def insert_proj(project:dict):
+    parsed_db_uri = urlparse(db_creds.db_uri)
     conn = psycopg2.connect(
-        host=db_creds.db_host,
-        database=db_creds.db_database,
-        user=db_creds.db_username,
-        password=db_creds.db_password.get_secret_value())
+        host=parsed_db_uri.hostname,
+        database=parsed_db_uri.path[1:],
+        user=parsed_db_uri.username,
+        password=parsed_db_uri.password)
     cur = conn.cursor()
     sql = "INSERT INTO projects (name,description,skills) VALUES (%(name)s, %(description)s,%(skills)s)"
     cur.execute(sql,project)
