@@ -19,5 +19,5 @@ test:
     entrypoint: [""]
   script:
     - pip install pytest
-    - ls
-    - pytest tests/
+    - export PYTHONPATH="$PYTHONPATH:."
+    - pytest .
