@@ -20,4 +20,4 @@ test:
   script:
     - pip install pytest
     - ls
-    - pytest .
+    - pytest tests/
