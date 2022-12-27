@@ -15,7 +15,7 @@ build:
 test:
   stage: test
   image:
-    name: "${CI_REGISTRY_IMAGE}:${CI_COMMIT_TAG}"
+    name: registry.gitlab.com/ensae-dev/projects_2022_2023/data-solution
     entrypoint: [""]
   script:
     - pip install pytest
