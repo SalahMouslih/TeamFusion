@@ -10,4 +10,6 @@ RUN pip install -r /code/requirements.txt
 
 COPY ./app /code/app
 
+COPY ./tests/ /code/tests/
+
 ENTRYPOINT ["uvicorn", "app.core.main:app", "--reload" ,"--host", "0.0.0.0"]
