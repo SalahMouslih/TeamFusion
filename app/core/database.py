@@ -1,14 +1,16 @@
 from app.models import model
 import psycopg2
+from urllib.parse import urlparse
 
 db_creds = model.DBCreds()
 
 def init_db():
+    parsed_db_uri = urlparse(db_creds.db_uri)
     conn = psycopg2.connect(
-        host=db_creds.db_host,
-        database=db_creds.db_database,
-        user=db_creds.db_username,
-        password=db_creds.db_password.get_secret_value())
+        host=parsed_db_uri.hostname,
+        database=parsed_db_uri.path[1:],
+        user=parsed_db_uri.username,
+        password=parsed_db_uri.password)
     cur = conn.cursor()
     cur.execute('DROP TABLE IF EXISTS resumes;')
     cur.execute('CREATE TABLE resumes (id serial PRIMARY KEY,'
