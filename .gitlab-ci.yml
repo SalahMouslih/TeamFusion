@@ -12,6 +12,15 @@ build:
       --context "${CI_PROJECT_DIR}"
       --dockerfile "${CI_PROJECT_DIR}/Dockerfile"
       --destination "${CI_REGISTRY_IMAGE}:${CI_COMMIT_TAG}"
+services:
+  - postgres:12.2-alpine
+
+variables:
+  POSTGRES_DB: fastapi_db
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: postgres
+  POSTGRES_HOST_AUTH_METHOD: trust
+
 test:
   stage: test
   image:
@@ -19,5 +28,4 @@ test:
     entrypoint: [""]
   script:
     - pip install pytest
-    - export PYTHONPATH="$PYTHONPATH:."
-    - python -m pytest -s tests
+    - pytests .
