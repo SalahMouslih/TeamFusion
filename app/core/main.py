@@ -7,6 +7,8 @@ from pyresparser import ResumeParser
 from fastapi import FastAPI, File, UploadFile, Form
 from nltk.tokenize import word_tokenize
 from typing import Optional
+import rake_nltk
+from rake_nltk import Rake
 
 model = spacy.load('en_core_web_sm')
 
@@ -49,29 +51,16 @@ def upload(file: UploadFile = File(...)):
     finally:
         file.file.close()
 
-
-
-@app.post('/extract')
-def exctract(text : str):
-    #db.insert(text)
-    entities : Dict = {}
-    doc = model(text)
-    for entity in doc.ents:
-        entities[entity.text] = entity.label_
-    return json.dumps(entities)
-
-
-@app.post("/extractions", response_model=Output)
+@app.post("/extractions")
 def extractions(input: Input):
-    document = model(input.sentence)
+    document = input.sentence
+    r = Rake()
+    res = []
 
-    extractions = []
-    for entity in document.ents:
-      extraction = {}
-      extraction["first_index"] = entity.start_char
-      extraction["last_index"] = entity.end_char
-      extraction["name"] = entity.label_
-      extraction["content"] = entity.text
-      extractions.append(extraction)
+    r.extract_keywords_from_text(document)
 
-    return {"extractions": extractions}
+    for rating, keyword in r.get_ranked_phrases_with_scores():
+        if rating > 4:
+            res.append(keyword)
+
+    return res
