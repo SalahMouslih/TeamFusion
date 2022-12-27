@@ -56,6 +56,7 @@ def test_upload_project(client):
                         )
     assert response.status_code == 303
 
+
 def test_match_teams(client):
     data={
         "name" : "dummy project",
