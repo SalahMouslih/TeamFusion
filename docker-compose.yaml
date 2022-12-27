@@ -9,8 +9,6 @@ services:
       - .env
     ports:
       - "8000:8000"
-
-
   db:
     image: postgres:12
     env_file:
