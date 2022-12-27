@@ -22,9 +22,17 @@ database.init_db()
 
 app = FastAPI()
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
-templates = Jinja2Templates(directory="templates")
+class Input(BaseModel):
+    sentence: str
 
+class Extraction(BaseModel):
+    first_index: int
+    last_index: int
+    name: str
+    content: str
+
+class Output(BaseModel):
+    extractions: List[Extraction]
 
 @app.get("/")
 async def root():
@@ -87,9 +95,14 @@ def upload(request:Request, file: UploadFile = File(...)):
             return RedirectResponse(redirect_url, status_code=status.HTTP_303_SEE_OTHER)
 
 
-    finally:
-        file.file.close()
-
+@app.post('/extract')
+def exctract(text : str):
+    #db.insert(text)
+    entities : Dict = {}
+    doc = model(text)
+    for entity in doc.ents:
+        entities[entity.text] = entity.label_
+    return json.dumps(entities)
 
 
 
