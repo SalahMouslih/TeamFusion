@@ -19,4 +19,5 @@ test:
     entrypoint: [""]
   script:
     - pip install pytest
+    - ls
     - pytest .
