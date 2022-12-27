@@ -14,7 +14,6 @@ from starlette.datastructures import URL
 from app.core import database
 from app.models import model
 
-database.init_db()
 model = spacy.load("en_core_web_sm")
 
 app = FastAPI()
