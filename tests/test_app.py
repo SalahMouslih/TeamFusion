@@ -1,8 +1,8 @@
 import pytest
-import json
 from fastapi.testclient import TestClient
-from requests_toolbelt.multipart.encoder import MultipartEncoder
-from app.core.main import app 
+
+from app.core.main import app
+
 
 @pytest.fixture 
 def client():
