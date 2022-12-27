@@ -28,4 +28,4 @@ test:
     entrypoint: [""]
   script:
     - pip install pytest
-    - pytests .
+    - pytest .
