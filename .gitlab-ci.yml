@@ -16,10 +16,10 @@ services:
   - postgres:12.2-alpine
 
 variables:
-  POSTGRES_DB: fastapi_db
   POSTGRES_USER: postgres
   POSTGRES_PASSWORD: postgres
-  POSTGRES_HOST_AUTH_METHOD: trust
+  # Variable used to allow project to connect to gitlab-ci service
+  DB_URI: "postgresql://postgres:postgres@postgres:5432/fastapi_db"
 
 test:
   stage: test
