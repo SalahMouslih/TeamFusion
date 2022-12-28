@@ -64,7 +64,10 @@ def upload(request:Request, file: UploadFile = File(...)):
                 resume["phone"] = data["phone"]
                 resume["degree"] = data["degree"]
                 resume["skills"] = []
-                resume["skills"] = [skill for skill in data["skills"] if skill.lower() in skills]
+                #resume["skills"] = [skill for skill in data["skills"] if skill.lower() in skills]
+
+                resume["skills"] = [s for s in skills if any(skill.lower() in s for skill in data["skills"])]
+
                 print(resume["skills"])    
                 resume["tot_exp"] = data["total_exp"]
                 print(resume)
@@ -72,18 +75,18 @@ def upload(request:Request, file: UploadFile = File(...)):
                 database.insert(resume)
                 
                 message = True
+
                 #redirect with success message
                 redirect_url = URL(request.url_for('form_post')).include_query_params(msg=message)
                 response = RedirectResponse(redirect_url, status_code=status.HTTP_303_SEE_OTHER)
-                #added post data to unit test
-                response.form_data = resume
+                
                 return response
 
 
     except Exception:
             message = False
             redirect_url = URL(request.url_for('form_post')).include_query_params(msg=message)
-            return RedirectResponse(redirect_url, status_code=status.HTTP_303_SEE_OTHER, context={"resume":resume})
+            return RedirectResponse(redirect_url, status_code=status.HTTP_303_SEE_OTHER)
 
     finally:
         file.file.close()
@@ -185,7 +188,7 @@ async def match_teams(request:Request, name: str = Form(...), number: int  = For
         
         # Check if the resume has the required skills
         for skill in skills:
-            if (skill in required_skills) : team_member["num_skills"]+= 1
+            if (skill.lower() in required_skills) : team_member["num_skills"]+= 1
         team.append(team_member)
     
     team = sorted(team, key=lambda x: x["num_skills"], reverse= True)
