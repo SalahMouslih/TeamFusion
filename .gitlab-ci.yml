@@ -35,6 +35,7 @@ test:
 
 deploy:
   image: alpine
+  stage: deploy
   variables:
     SSH_PRIVATE_KEY: "fdzefde"
     INSTANCE: "fzefzef"
