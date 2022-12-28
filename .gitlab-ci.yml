@@ -9,7 +9,7 @@ deploy:
   stage: deploy
   variables:
     INSTANCE: "ec2-user@ec2-54-165-224-235.compute-1.amazonaws.com"
-    SSH_PRIVATE_KEY >
+    SSH_PRIVATE_KEY: >
     -----BEGIN RSA PRIVATE KEY-----
 MIIEowIBAAKCAQEAllQ5yG4MtA/q9hCq+OQlrh0QgdkN1FrxB6+4ONBDr8aqRIBD
 EBf2YslnwgXZfX2xuxhIpzzDT3JknwD4ioy3hvh67/IXJ98DqkUP8o/fUc/qgreD
