@@ -9,8 +9,11 @@ deploy:
   stage: deploy
   variables:
     INSTANCE: "ec2-user@ec2-54-165-224-235.compute-1.amazonaws.com"
-    SSH_PRIVATE_KEY: >
-    -----BEGIN RSA PRIVATE KEY-----
+  before_script:
+    - apk add openssh-client
+    - eval $(ssh-agent -s)
+    - |
+      SSH_PRIVATE_KEY='-----BEGIN RSA PRIVATE KEY-----
 MIIEowIBAAKCAQEAllQ5yG4MtA/q9hCq+OQlrh0QgdkN1FrxB6+4ONBDr8aqRIBD
 EBf2YslnwgXZfX2xuxhIpzzDT3JknwD4ioy3hvh67/IXJ98DqkUP8o/fUc/qgreD
 14Qjp+LUvnX/UPP9GaWNI3kNrd9i/AadiWy6gewcwAwGbsHIS89xYprPcdVJrXav
@@ -36,10 +39,7 @@ Xf9mSKW8UwK18OBK/0TrpYJ6curlvMcT/GqwM6xlLKjRc51K7bzD3qrY0JohJMY1
 gUlDwQKBgCaTNn035duR6cJG1VuwUlQ2njBnFcy+jTmMa5qUDIEdDb1MeXoyOnZh
 MVOKnamT1X5Hj294QzLlwZe4UQXP7hp8AZqEoSeqOOzE+W0mCj6WrzVUvpVA8pEq
 dxp7WHT1ehYRuHK2EICGt/5P3jS+u3uN6kghpx2s/DL28cz9RjWm
------END RSA PRIVATE KEY-----
-  before_script:
-    - apk add openssh-client
-    - eval $(ssh-agent -s)
+-----END RSA PRIVATE KEY-----'
     - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
