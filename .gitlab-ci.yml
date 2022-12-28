@@ -46,4 +46,4 @@ deploy:
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
   script:
-    - ssh -o StrictHostKeyChecking=no $INSTANCE "cd ~; touch test.txt"
+    - ssh -o StrictHostKeyChecking=no $INSTANCE "cd project; docker-compose down; docker rm -f $(docker ps -a -q); docker-compose up -d"
