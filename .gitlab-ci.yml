@@ -9,7 +9,11 @@ deploy:
   image: alpine
   stage: deploy
   variables:
-    SSH_PRIVATE_KEY: 'MIIEowIBAAKCAQEAllQ5yG4MtA/q9hCq+OQlrh0QgdkN1FrxB6+4ONBDr8aqRIBD
+    INSTANCE: "ec2-user@ec2-54-165-224-235.compute-1.amazonaws.com"
+  before_script:
+    - apk add openssh-client
+    - eval $(ssh-agent -s)
+    - SSH_PRIVATE_KEY=''MIIEowIBAAKCAQEAllQ5yG4MtA/q9hCq+OQlrh0QgdkN1FrxB6+4ONBDr8aqRIBD
 EBf2YslnwgXZfX2xuxhIpzzDT3JknwD4ioy3hvh67/IXJ98DqkUP8o/fUc/qgreD
 14Qjp+LUvnX/UPP9GaWNI3kNrd9i/AadiWy6gewcwAwGbsHIS89xYprPcdVJrXav
 +00M7kFLG3GUw/VD59P3ahXPuD2R7e8cOtPX9k46LymzkmhILq5Ruz71iauEcxK4
@@ -33,11 +37,7 @@ sO7zmle5I889/Rb+t8GwG9rerEzEbHcjLrSpn+P3OgIZGh1qEP4bgK5okUfhZbgD
 Xf9mSKW8UwK18OBK/0TrpYJ6curlvMcT/GqwM6xlLKjRc51K7bzD3qrY0JohJMY1
 gUlDwQKBgCaTNn035duR6cJG1VuwUlQ2njBnFcy+jTmMa5qUDIEdDb1MeXoyOnZh
 MVOKnamT1X5Hj294QzLlwZe4UQXP7hp8AZqEoSeqOOzE+W0mCj6WrzVUvpVA8pEq
-dxp7WHT1ehYRuHK2EICGt/5P3jS+u3uN6kghpx2s/DL28cz9RjWm'
-    INSTANCE: "ec2-user@ec2-54-165-224-235.compute-1.amazonaws.com"
-  before_script:
-    - apk add openssh-client
-    - eval $(ssh-agent -s)
+dxp7WHT1ehYRuHK2EICGt/5P3jS+u3uN6kghpx2s/DL28cz9RjWm''
     - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
