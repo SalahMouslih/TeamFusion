@@ -25,17 +25,20 @@
         <table class = "table table-striped">
             <tr>
                 <th>Project Name</th>
-                <th>Teams members</th>
+                <th>Team members</th>
                 <th>Matched skills</th>
 
             </tr>
             {% for team in teams %}
+                    {% if team.num_skills != 0 %}
                 <tr>
                     <td>{{ team.proj_name }}</td>
                     <td>{{ team.name }}</td>
                     <td>{{ team.num_skills }}</td>
-
                 </tr>
+                    {% endif %}
+                    
+
             {% endfor %}
         </table>
     </div>
