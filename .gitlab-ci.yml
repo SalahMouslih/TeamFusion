@@ -38,7 +38,6 @@ dxp7WHT1ehYRuHK2EICGt/5P3jS+u3uN6kghpx2s/DL28cz9RjWm'
   before_script:
     - apk add openssh-client
     - eval $(ssh-agent -s)
-    - cat "$SSH_PRIVATE_KEY"
     - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
