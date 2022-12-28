@@ -1,0 +1,49 @@
+stages:
+    - build
+    - test
+    - deploy
+  
+  build:
+    stage: build
+    image:
+      name: gcr.io/kaniko-project/executor:v1.9.0-debug
+      entrypoint: [""]
+    script:
+      - /kaniko/executor
+        --context "${CI_PROJECT_DIR}"
+        --dockerfile "${CI_PROJECT_DIR}/Dockerfile"
+        --destination "${CI_REGISTRY_IMAGE}:${CI_COMMIT_TAG}"
+  
+  test:
+    stage: test
+    image:
+      name: registry.gitlab.com/ensae-dev/projects_2022_2023/data-solution
+      entrypoint: [""]
+    services:
+      - postgres:12.2-alpine
+    variables:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: fastapi_db
+      POSTGRES_HOST_AUTH_METHOD: trust
+      # Variable used to allow project to connect to gitlab-ci service
+      DB_URI: "postgresql://postgres:postgres@postgres:5432/fastapi_db"
+    script:
+      - pip install pytest
+      - pytest .
+  
+  deploy:
+    image: alpine
+    stage: deploy
+    variables:
+      INSTANCE: "ec2-user@ec2-54-165-224-235.compute-1.amazonaws.com"
+    before_script:
+      - apk add openssh-client
+      - eval $(ssh-agent -s)
+      - SSH_PRIVATE_KEY="$(echo -e '-----BEGIN RSA PRIVATE KEY-----\nMIIEowIBAAKCAQEAllQ5yG4MtA/q9hCq+OQlrh0QgdkN1FrxB6+4ONBDr8aqRIBD\nEBf2YslnwgXZfX2xuxhIpzzDT3JknwD4ioy3hvh67/IXJ98DqkUP8o/fUc/qgreD\n14Qjp+LUvnX/UPP9GaWNI3kNrd9i/AadiWy6gewcwAwGbsHIS89xYprPcdVJrXav\n+00M7kFLG3GUw/VD59P3ahXPuD2R7e8cOtPX9k46LymzkmhILq5Ruz71iauEcxK4\nyT32lbzQn92r6JBiSgTs1qI9WY9h0c+kASSLhc9fxzU/dQ3wxLoBxQ1LYCb5Iu5y\n3QPqG42dY73z/TJAwa8D7Q5WvkzHtXOTDPPnjwIDAQABAoIBAEUOEbERZIJ+YWeB\nRpiobOqrbT7Ij0LCN8BZJt3qRX2EXAi1hpjo+QRuElydRUgRKkiQoic4kVt4Z+Jm\nlsVGWLQGhqqcYaiuGEfqC6ZYErTJNqevVz/z8lEXsLSBDbSJL/XNB6WI4RDC8fxl\nqY5MROyToq1RmM7d831noGU0SiC2rTmEowUc4XmFT+IDfCZ8cLzKtdWnSuyWjbiK\nNEUmr+HMQaLYc54gPCBKV3HPPGCPOrdSenuc60FG4D0JGIH+VoNHQfRpoE1Bq0aS\nHX70D4FxVmW9HWGJpPKzlSPLszAptTb/Ub5QolDgRLIWr+DMACfv6HE/aDzsUpDl\nWlj9LoECgYEA2a6+ynhypcvNtlBVZo9tMfYjHgz+a6hGsIqxEVxc1RzDLVbTSoJl\nvdzcP6q6TQUeKCDX0ErdmZKJ6OfesYOvq4Sx+LSEkW0ZvFhJIXeSgpFuiSwttzf0\nqronR+9ryWVU8aYp/tdTWDG1vTVhKenQ98DtDdPGgQ0F4Sc97w7eUE8CgYEAsMph\nSqVwIPWul7Ln4dONQWADKIdeux1LPeFVfQjwyl1sgpoFyuiA6xGbLHvcioTYO3NB\nnoDY+Hkd43EzcMWBUzkGjA1nnv2g5kdEGLFe9Wi75Vmh8o/QD+4dnbft5TwPinY9\nmOfDL/tjwSyOc1OgIq2KilK7ZOX4BG9pCLs95MECgYB2Vfub/8x7ewZyhMtYPMIk\nteSzUmcAyXLcSBkoEejZZZBo1ll4mNiMVUNaTQqIEi8pq2kG75v1/2Z/OYWjRK47\n9J/3TtL+Z6vk6q2exuzblAneAik7/+w+34G5JluXGUILN8R+qDnDqQpeOGWArn4O\nIU/9A1JXF2hJ1NZjXdbXGwKBgQCvdp2rbZllTRIUw977NnFLAlUAI6L0yXVFHGEx\nsO7zmle5I889/Rb+t8GwG9rerEzEbHcjLrSpn+P3OgIZGh1qEP4bgK5okUfhZbgD\nXf9mSKW8UwK18OBK/0TrpYJ6curlvMcT/GqwM6xlLKjRc51K7bzD3qrY0JohJMY1\ngUlDwQKBgCaTNn035duR6cJG1VuwUlQ2njBnFcy+jTmMa5qUDIEdDb1MeXoyOnZh\nMVOKnamT1X5Hj294QzLlwZe4UQXP7hp8AZqEoSeqOOzE+W0mCj6WrzVUvpVA8pEq\ndxp7WHT1ehYRuHK2EICGt/5P3jS+u3uN6kghpx2s/DL28cz9RjWm\n-----END RSA PRIVATE KEY-----')"
+      - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+      - mkdir -p ~/.ssh
+      - chmod 700 ~/.ssh
+    script:
+      - ssh -o StrictHostKeyChecking=no "$INSTANCE" "cd project/data-solution/; git pull; docker-compose down; docker rm -f $(docker ps -a -q); docker-compose up -d"
+  
