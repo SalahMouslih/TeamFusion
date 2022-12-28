@@ -1,9 +1,9 @@
 from fastapi import FastAPI, Request, status
+from fastapi import FastAPI, Depends, HTTPException
 import spacy 
 import json
 from app.models import model
 from typing import List
-from pyresparser import ResumeParser
 from fastapi import FastAPI, File, UploadFile, Form
 from nltk.tokenize import word_tokenize
 from typing import Optional
@@ -14,7 +14,6 @@ from io import  BytesIO
 from resume_parser import resumeparse
 from tempfile import TemporaryDirectory
 import os
-import aiofiles
 from app.core import database
 from starlette.datastructures import URL
 
@@ -73,7 +72,6 @@ def upload(request:Request, file: UploadFile = File(...)):
                 database.insert(resume)
                 
                 message = True
-                
                 #redirect with success message
                 redirect_url = URL(request.url_for('form_post')).include_query_params(msg=message)
                 response = RedirectResponse(redirect_url, status_code=status.HTTP_303_SEE_OTHER)
@@ -85,13 +83,13 @@ def upload(request:Request, file: UploadFile = File(...)):
     except Exception:
             message = False
             redirect_url = URL(request.url_for('form_post')).include_query_params(msg=message)
-            return RedirectResponse(redirect_url, status_code=status.HTTP_303_SEE_OTHER)
+            return RedirectResponse(redirect_url, status_code=status.HTTP_303_SEE_OTHER, context={"resume":resume})
 
     finally:
         file.file.close()
 
 @app.get("/resumes")
-async def list(request:Request):
+async def list_resumes(request:Request):
     res = database.list()
     resumes = []
     for data in res:
@@ -172,7 +170,7 @@ async def match_teams(request:Request, name: str = Form(...), number: int  = For
     for data in res:
         resume = {}
         resume["name"] = data[1]
-        resume["skills"] = data[4]    
+        resume["skills"] = data[4]
         resumes.append(resume)
     
     team = []
