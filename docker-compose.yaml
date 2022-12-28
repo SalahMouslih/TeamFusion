@@ -16,12 +16,12 @@ services:
     env_file:
       - .env
     volumes: 
-      - vol1:/var/lib/postgresql/data
+      - vol_1:/var/lib/postgresql/data
     expose:
       - 5432
     ports:
       - "5432:5432"
 
 volumes:
-   vol1:
+   vol_1:
 
