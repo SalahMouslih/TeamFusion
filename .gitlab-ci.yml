@@ -1,6 +1,7 @@
 stages:
   - build
   - test
+  - deploy
 
 build:
   stage: build
@@ -20,7 +21,6 @@ test:
     entrypoint: [""]
   services:
     - postgres:12.2-alpine
-
   variables:
     POSTGRES_USER: postgres
     POSTGRES_PASSWORD: postgres
@@ -31,3 +31,18 @@ test:
   script:
     - pip install pytest
     - pytest .
+
+
+deploy:
+  image: alpine
+  variables:
+    SSH_PRIVATE_KEY: "fdzefde"
+    INSTANCE: "fzefzef"
+  before_script:
+    - apk add openssh-client
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+  script:
+    - ssh -o StrictHostKeyChecking=no $INSTANCE "cd ~; touch test.txt"
