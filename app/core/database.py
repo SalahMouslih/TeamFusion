@@ -15,7 +15,7 @@ def init_db():
                                     'name varchar (30) NOT NULL,'
                                     'email varchar (50),'
                                     'phone varchar (30),'
-                                    'skills varchar (150) NOT NULL,'
+                                    'skills text NOT NULL,'
                                     'date_added date DEFAULT CURRENT_TIMESTAMP);'
                                     )
     
@@ -26,9 +26,9 @@ def init_db():
                                     'skills varchar (150) NOT NULL,'
                                     'date_added date DEFAULT CURRENT_TIMESTAMP);'
                                     )
-    sql = "INSERT INTO resumes (name,email,phone,skills) VALUES ('dummy name', 'email@email,com', '111111','SQL, Linux, Git')"
+    sql = "INSERT INTO resumes (name,email,phone,skills) VALUES ('dummy name', 'email@email,com', '111111','sql, linux, git')"
     cur.execute(sql)
-    sql_ = "INSERT INTO projects (name,description,skills) VALUES ('Project_1','We are looking for a developer with strong skills in Python, Java, and SQL. Experience with Linux and Git is a plus','Python, Java, SQL, Linux, Git')"
+    sql_ = "INSERT INTO projects (name,description,skills) VALUES ('Project_1','We are looking for a developer with strong skills in Python, Java, and SQL. Experience with Linux and Git is a plus','python, java, sql, linux, git')"
     cur.execute(sql_)
     conn.commit()
     cur.close()

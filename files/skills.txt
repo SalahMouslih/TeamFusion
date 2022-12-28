@@ -3,19 +3,27 @@ python
 java
 scala
 r
-stata
+git
 data engineering
 data warehousing
-big Data
+big data
 spark
+airflow
+Fastapi
+flask
+mysql
+postgresql
+mongodb
+docker
+git
 kafka
 apache kafka
 apache spark
-Machine Learning
-amazon web services
-aws
+machine learning
+deep learning
 cloud
 etl
-deep learning
+amazon web services
+aws
 azure
 microsoft azure

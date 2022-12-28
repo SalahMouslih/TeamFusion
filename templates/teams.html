@@ -6,7 +6,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
 
     {% block title %}
-    <title>Home</title>
+    <title>Teams</title>
     {% endblock %}
 
 </head>
@@ -19,23 +19,32 @@
     {% block scripts %}
     {% endblock %}
     
+    {% if msg == 'False' %}
+         <div class="alert alert-danger" class="close">
+            An error occured, Please try again!
+        </div>
+    {% else %}
+
     <div class="bg-light p-5 rounded-lg m-3">
     
     <div class="center">
         <table class = "table table-striped">
             <tr>
                 <th>Project Name</th>
-                <th>Teams members</th>
+                <th>Team members</th>
                 <th>Matched skills</th>
 
             </tr>
             {% for team in teams %}
+                    {% if team.num_skills != 0 %}
                 <tr>
                     <td>{{ team.proj_name }}</td>
                     <td>{{ team.name }}</td>
                     <td>{{ team.num_skills }}</td>
-
                 </tr>
+                    {% endif %}
+                    
+
             {% endfor %}
         </table>
     </div>
@@ -44,6 +53,7 @@
     
     <div>
    
+    {% endif %}
 
     <a href="/match" class="button">
     <button class="btn btn-secondary" type="button" ><i class="bx bxs-cloud-upload"
