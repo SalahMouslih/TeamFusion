@@ -17,4 +17,4 @@ deploy:
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
   script:
-    - ssh -o StrictHostKeyChecking=no "$INSTANCE" "cd project; docker-compose down; docker rm -f $(docker ps -a -q); docker-compose up -d"
+    - ssh -o StrictHostKeyChecking=no "$INSTANCE" "cd project/data-solution/; docker-compose down; docker rm -f $(docker ps -a -q); docker-compose up -d"
