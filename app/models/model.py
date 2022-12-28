@@ -1,5 +1,6 @@
 from pydantic import BaseModel, BaseSettings, Field, SecretStr
 
+
 class DBCreds(BaseSettings):
     db_username: str = Field(..., env="POSTGRES_USER")
     db_password: SecretStr = Field(..., env="POSTGRES_PASSWORD")
@@ -17,10 +18,25 @@ class Resume(BaseModel):
     name : str
     email : str
     phone : str
-    degree : str
     skills : list
-    tot_exp : int
 
 
 class Resumes(BaseModel):
     Resumes : list
+
+
+class Project(BaseModel):
+    name : str
+    description : str
+    skills : list
+
+class Projects(BaseModel):
+    Projects : list
+
+class Team(BaseModel):
+    proj_name : str
+    name : str
+    num_skills : int
+
+class Teams(BaseModel):
+    Teams : list
