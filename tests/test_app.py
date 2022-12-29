@@ -25,7 +25,7 @@ def test_home(client):
 
 
 
-def test_upload(client,test_db):
+def test_upload_resume(client,test_db):
 
     filename = "files/resume_01.pdf"
     response = client.post("/uploadresumes",
@@ -60,13 +60,14 @@ def test_upload_project(client,test_db):
         "name" : "dummy project",
         "text" : "dummy text"
     }
+    
     response = client.post("/uploadprojects",
                             data = data
                         )
     assert response.status_code == 303
 
 
-def test_list_proj(client,test_db):
+def test_list_projects(client,test_db):
     
     expected_output=[
         {
@@ -84,6 +85,7 @@ def test_list_proj(client,test_db):
 
 
 def test_match(client, test_db):
+    
     response = client.get('/match')
 
     assert response.context["projects"] == [{'name': 'Project_1'}] 
@@ -91,11 +93,13 @@ def test_match(client, test_db):
     assert response.headers["Content-Type"] == 'text/html; charset=utf-8'
 
 
-def test_match_teams(client,test_db):
+def test_gen_teams(client,test_db):
+    
     data={
         "name" : "Project_1",
         "number" : 1
     }
+    
     response = client.post("/matchs",
                             data = data
                         )
