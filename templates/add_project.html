@@ -6,7 +6,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
 
     {% block title %}
-    <title>Home</title>
+    <title>Add resumes</title>
     {% endblock %}
 
 </head>
@@ -20,26 +20,26 @@
     {% endblock %}
    
     {% if msg == 'True' %}
-    <div class="alert alert-primary" class="close">
-        Project added successfully!
+   <div class="alert alert-primary" class="close">
+        Resume uploaded successfully!
     </div>
-    {% elif msg == 'False' %}
-    <div class="alert alert-primary" class="close">
-        There has been an error adding the project. Please try again!
-    </div>    
     {% endif %}
 
-    <form action="uploadprojects" method="post" autocomplete="off">
+    {% if msg == 'False' %}
+    <div class="alert alert-danger" class="close">
+        There was an error processing the file, Please try again!
+    </div>
+    {% endif %}
+
+    <form action="uploadresumes" enctype="multipart/form-data" method="post" autocomplete="off">
 
         <div class="bg-light p-5 rounded-lg m-3">
-            <h5>Enter project name:</h5>
-                <input type="text" name="name"><br>
-            <h5>Enter project description:</h5>
-                <textarea rows = "5" cols = "170" name = "text"></textarea><br>
+            <h5>Upload resume:</h5>
+            <input class="form-control" type="file" id="file" name="file" required>
         </div>
         <div class="bg-light rounded-lg m-3">
             <button class="btn btn-primary" type="button submit"><i class="bx bxs-cloud-upload"
-                    style="font-size:1.4em;"></i> Add</button>
+                    style="font-size:1.4em;"></i> Upload</button>
         
             <a href="/home" class="button">
                 <button class="btn btn-secondary" type="button" formnovalidate><i class="bx bxs-cloud-upload"
