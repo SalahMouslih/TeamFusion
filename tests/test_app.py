@@ -43,7 +43,7 @@ def test_list_resumes(client,test_db):
         'email': 'email@email,com',
         'name': 'dummy name',
         'phone': '111111',
-        'skills': 'SQL, Linux, Git'
+        'skills': 'sql, linux, git'
         }
     ]
     
@@ -72,7 +72,7 @@ def test_list_proj(client,test_db):
         {
         "name" : "Project_1",
         "description" : "We are looking for a developer with strong skills in Python, Java, and SQL. Experience with Linux and Git is a plus",
-        "skills" : 'Python, Java, SQL, Linux, Git'
+        "skills" : 'python, java, sql, linux, git'
         }
     ]
 
