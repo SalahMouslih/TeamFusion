@@ -19,6 +19,7 @@ Unfortunatly, due to some CPU utilization problems *- a common problem when usin
 But here is a better idea :bulb: : clone the project locally so you can explore the codebase and even reuse some bits in your projects! (Just make sure to inculde an attribution :smiley: )
 
 More on FastAPI : [Here](https://fastapi.tiangolo.com/).
+
 More on Gitlab Pipelines : [Here](https://docs.gitlab.com/ee/ci/pipelines/). 
 
 ## Run the app localy
@@ -50,7 +51,7 @@ The server now is running in development mode on your local machine (localhost o
 
 ## Endpoints
 
-You can check the documentation by taping http://127.0.0.1:8000/docs.
+You can check the documentation at http://127.0.0.1:8000/docs.
 
 ## Final note
 
