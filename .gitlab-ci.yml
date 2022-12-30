@@ -29,7 +29,6 @@ test:
       # Variable used to allow project to connect to gitlab-ci service
       DB_URI: "postgresql://postgres:postgres@postgres:5432/fastapi_db"
     script:
-      - pip install pytest
       - pytest .
         
 deploy:
