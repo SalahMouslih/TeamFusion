@@ -39,8 +39,7 @@ You will be able to:
 With this, you can **build teams** for your projects by matching skills 
 """
 
-database.init_db()
-nlp = spacy.load("en_core_web_sm")
+
 
 tags_metadata = [
     {
@@ -82,6 +81,12 @@ tags_metadata = [
     },
 ]
 
+nlp = spacy.load("en_core_web_sm")
+database.init_db()
+
+templates = Jinja2Templates(directory="templates")
+
+
 app = FastAPI(
     title="TeamComp",
     description=description,
@@ -104,7 +109,6 @@ app = FastAPI(
 )
 
 
-templates = Jinja2Templates(directory="templates")
 
 
 @app.get("/")
@@ -118,12 +122,13 @@ async def home(request: Request):
 
 
 @app.get("/uploadresume",response_class=HTMLResponse , tags=["resume"])
-async def form_post(request: Request, msg: Optional[str] = None,):
+async def upload_res(request: Request, msg: Optional[str] = None,):
     return templates.TemplateResponse("add_resume.html", {"request": request, "msg": msg})
 
-@app.post("/uploadresumes", tags=["resume"])
-def upload(request:Request, file: UploadFile = File(...)):
+@app.post("/uploadresumes",response_model = model.Resumes, tags=["resume"])
+def upload_resume(request:Request, file: UploadFile = File(...)):
     try:
+        #load skills file
         skills = []
         f = open('files/skills.txt', 'r')
         skills = f.read().split('\n')
@@ -146,27 +151,25 @@ def upload(request:Request, file: UploadFile = File(...)):
                 resume["degree"] = data["degree"]
                 resume["skills"] = []
                 #resume["skills"] = [skill for skill in data["skills"] if skill.lower() in skills]
-
                 resume["skills"] = [s for s in skills if any(skill.lower() in s for skill in data["skills"])]
-
-                print(resume["skills"])    
                 resume["tot_exp"] = data["total_exp"]
-                print(resume)
+                
                 #save infos
                 database.insert(resume)
                 
+                #redirect with success message
                 message = True
 
-                #redirect with success message
-                redirect_url = URL(request.url_for('form_post')).include_query_params(msg=message)
+                redirect_url = URL(request.url_for('upload_res')).include_query_params(msg=message)
                 response = RedirectResponse(redirect_url, status_code=status.HTTP_303_SEE_OTHER)
                 
                 return response
 
-
     except Exception:
+                        
+            #redirect with failure message
             message = False
-            redirect_url = URL(request.url_for('form_post')).include_query_params(msg=message)
+            redirect_url = URL(request.url_for('upload_res')).include_query_params(msg=message)
             return RedirectResponse(redirect_url, status_code=status.HTTP_303_SEE_OTHER)
 
     finally:
@@ -188,38 +191,43 @@ async def list_resumes(request:Request):
 
 
 @app.get("/uploadproject",response_class=HTMLResponse, tags=["project"])
-async def form_post_proj(request: Request, msg: Optional[str] = None,):
+async def upload_proj(request: Request, msg: Optional[str] = None,):
     return templates.TemplateResponse("add_project.html", {"request": request, "msg": msg})
 
 
 @app.post("/uploadprojects", tags=["project"])
 async def upload_project(request:Request, name: str = Form(...), text: str = Form(...)):  
     try: 
+        #pass text to model
         doc = nlp(text)
         entities = [ent.text for ent in doc.ents if ent.label_ == "IT"]
                 
         project = {}
         project["name"] = name
         project["description"] = text
+        #extract project skills
         project["skills"] = [doc.text.lower() for doc in doc.ents]        
         
+        #save project to database
         database.insert_proj(project)
 
+        #redirect with succes message
         message = True
-
-        redirect_url = URL(request.url_for('form_post_proj')).include_query_params(msg=message)
+        redirect_url = URL(request.url_for('upload_proj')).include_query_params(msg=message)
         response = RedirectResponse(redirect_url, status_code=status.HTTP_303_SEE_OTHER)
         return response
 
     except Exception:
+
+        #redirect with failure message
         message = False
-        redirect_url = URL(request.url_for('form_post_proj')).include_query_params(msg=message)
+        redirect_url = URL(request.url_for('upload_proj')).include_query_params(msg=message)
         response = RedirectResponse(redirect_url, status_code=status.HTTP_303_SEE_OTHER)
         return response
 
 
 @app.get("/projects", response_model = model.Projects, tags=["projects"])
-async def list_proj(request:Request):
+async def list_projects(request:Request):
     try:
         res = database.list_proj()
         projects = []
@@ -253,13 +261,16 @@ async def match(request:Request):
         return templates.TemplateResponse("match.html", {"request": request, "message": message})
 
 @app.post("/matchs", response_model = model.Teams, tags=["match"])
-async def match_teams(request:Request, name: str = Form(...), number: int  = Form(...)):
+async def gen_teams(request:Request, name: str = Form(...), number: int  = Form(...)):
 
     try: 
+        #retrieve project by passing project name
         project = database.sel_proj(name)
+        
         # Get the required skills for the project
         required_skills = project[3]
 
+        #retrieve resumes
         res = database.list()
         
         resumes = []
@@ -282,12 +293,16 @@ async def match_teams(request:Request, name: str = Form(...), number: int  = For
             # Check if the resume has the required skills
             for skill in skills:
                 if (skill.lower() in required_skills) : team_member["num_skills"]+= 1
+            #add team member to teams list
             team.append(team_member)
         
+        #sort team by number of required skills desc
         team = sorted(team, key=lambda x: x["num_skills"], reverse= True)
 
+        #pass number of specified team members
         return templates.TemplateResponse("teams.html", {"request": request, "teams": team[:number]})
     
     except Exception:
+        
         message = False
         return templates.TemplateResponse("teams.html", {"request": request, "message": message})
