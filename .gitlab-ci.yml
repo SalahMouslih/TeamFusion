@@ -8,6 +8,8 @@ build:
     image:
       name: gcr.io/kaniko-project/executor:v1.9.0-debug
       entrypoint: [""]
+    rules:
+      - if: $CI_COMMIT_BRANCH == "production"
     script:
       - /kaniko/executor
         --context "${CI_PROJECT_DIR}"
@@ -19,6 +21,8 @@ test:
     image:
       name: registry.gitlab.com/ensae-dev/projects_2022_2023/data-solution
       entrypoint: [""]
+    rules:
+      - if: $CI_COMMIT_BRANCH == "production"
     services:
       - postgres:12.2-alpine
     variables:
@@ -34,6 +38,8 @@ test:
 deploy:
     image: alpine
     stage: deploy
+    rules:
+      - if: $CI_COMMIT_BRANCH == "production"
     variables:
       INSTANCE: "ec2-user@ec2-23-23-33-169.compute-1.amazonaws.com"
     before_script:
