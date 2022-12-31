@@ -34,6 +34,8 @@ test:
 deploy:
     image: alpine
     stage: deploy
+    rules:
+      - if: $CI_COMMIT_BRANCH == "main"
     variables:
       INSTANCE: "ec2-user@ec2-23-23-33-169.compute-1.amazonaws.com"
     before_script:
