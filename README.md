@@ -11,7 +11,7 @@ TeamComp is an API that utilizes data to match consultants to projects based on 
 for this, we parse Resume skills as well as project keywords and then perform the matching.
 
 The API was developed using **FastAPI** and was hosted using Gitlab pipelines to a AWS free tier **EC2** instance.
-The API is normally up and running at [http://23.23.33.169:80](http://23.23.33.169:80). Yes! an IP address! because every fancy website URL hides an ip address behind! 
+The API is normally up and running at [http://23.23.33.169:80](http://23.23.33.169:80). Yes! an IP address! because every fancy website URL hides an IP address behind! 
 
 Unfortunately, due to some CPU utilization problems *- a common problem when using free services -* , the API is inaccessible most of the time :disappointed:.
 
